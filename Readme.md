@@ -4,6 +4,7 @@ A term project website for database system (2110322) academic year 2021
 ## Get started
 - Install MongoDB
 - Install Mysql
+- Install Prettier extensions
 - `npm install` to install all dependencies
 - `node index.js` to start the server
 - set variables in `.env` file look at the `.env.example`
