@@ -1,9 +1,9 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const mysql = require("mysql");
+const express = require('express');
+const mongoose = require('mongoose');
+const mysql = require('mysql');
 
 // enviroment variable
-require("dotenv").config();
+require('dotenv').config();
 
 // process.env.PORT
 const mongoUri = process.env.MONGO_URI;
@@ -18,7 +18,7 @@ const app = express();
 mongoose
   .connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then((result) => {
-    console.log("connected to mongoDB");
+    console.log('connected to mongoDB');
     // listen for requests
   })
   .catch((err) => console.log(err.message));
@@ -28,13 +28,15 @@ const connection = mysql.createConnection({
   user: mysqlUser,
   password: mysqlPW,
   database: mysqlDB,
+  port: port,
 });
 
 connection.connect((err) => {
   if (err) {
-    console.error("error connecting: " + err.stack);
+    console.error('error connecting: ' + err.stack);
     return;
   }
-  console.log("connected to mySQL");
-  app.listen(port);
+  console.log('connected to mySQL');
 });
+
+app.listen(3000);
