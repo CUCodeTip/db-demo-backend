@@ -1,0 +1,19 @@
+{
+  "name": "database-project-demo-backend",
+  "version": "1.0.0",
+  "description": "A term project for Database System (2110322) Academic Year 2021",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "CodeTip",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^6.0.13",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
