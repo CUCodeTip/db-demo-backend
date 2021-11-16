@@ -15,8 +15,7 @@ const mysqlDB =  process.env.MYSQL_DB;
 
 const app = express();
 
-mongoose
-	.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
 	.then(result => {
 		console.log('connected to mongoDB');
 		// listen for requests
