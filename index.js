@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const mysql = require('mysql');
+const fs = require('fs');
 
 // enviroment variable
 require('dotenv').config();
@@ -29,6 +30,9 @@ const connection = mysql.createConnection({
   password: mysqlPW,
   database: mysqlDB,
   port: port,
+  ssl: {
+    ca: fs.readFileSync('./BaltimoreCyberTrustRoot.crt.pem'),
+  },
 });
 
 connection.connect((err) => {
