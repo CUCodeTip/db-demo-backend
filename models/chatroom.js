@@ -1,9 +1,20 @@
 const mongoose = require('mongoose');
+const Message = require('message');
 const Schema = mongoose.Schema;
 
-// TO DO: define chatroom schema
-const blogSchema = new Schema();
+const chatroomSchema = new Schema({
+  rideId: {
+    type: String,
+    required: true,
+    index: true,
+  },
+  title: {
+    type: String,
+    required: true,
+  },
+  message: [Message],
+});
 
-const Blog = mongoose.model('Blog', blogSchema);
+const Chatroom = mongoose.model('Chatroom', chatroomSchema);
 
-module.exports = Blog;
+module.exports = Chatroom;
