@@ -2,18 +2,21 @@ const mongoose = require('mongoose');
 const Message = require('message');
 const Schema = mongoose.Schema;
 
-const chatroomSchema = new Schema({
-  rideId: {
-    type: String,
-    required: true,
-    index: true,
+const chatroomSchema = new Schema(
+  {
+    rideId: {
+      type: String,
+      required: true,
+      index: true,
+    },
+    title: {
+      type: String,
+      required: true,
+    },
+    messages: [Message],
   },
-  title: {
-    type: String,
-    required: true,
-  },
-  message: [Message],
-});
+  { timestamps: true }
+);
 
 const Chatroom = mongoose.model('Chatroom', chatroomSchema);
 
