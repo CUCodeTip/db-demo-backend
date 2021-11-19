@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const mysql = require('mysql');
 const fs = require('fs');
+const chatRoutes = require('./routes/chatroomRoutes');
 
 // enviroment variable
 require('dotenv').config();
@@ -44,3 +45,9 @@ connection.connect((err) => {
 });
 
 app.listen(3000);
+
+// middlewares
+app.use(express.urlencoded({ extended: true }));
+
+// routes
+app.use('/api/chat', chatRoutes);
