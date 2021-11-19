@@ -44,6 +44,10 @@ connection.connect((err) => {
   console.log('connected to mySQL');
 });
 
+app.get('/test', (req, res) => {
+  res.send('Hello World');
+});
+
 app.listen(port, () => {
   console.log(`listening on port ${port}`);
 });
