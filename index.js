@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const connection = require('./db/mySQL');
+const connection = require('./mySQL');
 const cors = require('cors');
 
 const chatRoutes = require('./routes/chatroomRoutes');
