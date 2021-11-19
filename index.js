@@ -73,7 +73,7 @@ app.post('/api/login', (req, res) => {
       }
       if (result && result.length > 0) {
         console.log(data.userId, 'has just login');
-        res.json(result);
+        res.json(result[0]);
         return;
       }
       res.status(401).send('Not found');
