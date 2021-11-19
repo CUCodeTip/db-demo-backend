@@ -1,7 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const mysql = require('mysql');
+const cors = require('cors');
 const fs = require('fs');
+
+const chatRoutes = require('./routes/chatroomRoutes');
 
 // environment variable
 require('dotenv').config();
@@ -43,6 +46,13 @@ connection.connect((err) => {
   }
   console.log('connected to mySQL');
 });
+
+// middlewares
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+
+// routes
+app.use('/api/chat', chatRoutes);
 
 app.get('/test', (req, res) => {
   res.send('Hello World');
