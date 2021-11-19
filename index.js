@@ -49,6 +49,7 @@ db.connect((err) => {
 
 // middlewares
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(cors());
 
 // routes
@@ -60,10 +61,10 @@ app.get('/test', (req, res) => {
 
 // login route
 app.post('/api/login', (req, res) => {
-  const userId = req.body.userId;
+  const data = req.body;
   db.query(
     'SELECT * FROM passenger WHERE user_id = ?',
-    [userId],
+    [data.userId],
     (err, result) => {
       if (err) {
         console.log(err.message);
@@ -71,6 +72,7 @@ app.post('/api/login', (req, res) => {
         return;
       }
       if (result && result.length > 0) {
+        console.log(data.userId, 'has just login');
         res.json(result);
         return;
       }
