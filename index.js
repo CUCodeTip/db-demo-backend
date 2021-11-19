@@ -1,10 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const mysql = require('mysql');
+const connection = require('./db/mySQL');
 const cors = require('cors');
-const fs = require('fs');
 
 const chatRoutes = require('./routes/chatroomRoutes');
+const sqlRoutes = require('./routes/sqlRoutes');
 
 // environment variable
 require('dotenv').config();
@@ -12,11 +12,6 @@ require('dotenv').config();
 // process.env.PORT
 const mongoUri = process.env.MONGO_URI;
 const port = process.env.PORT || 3000;
-const mysqlHost = process.env.MYSQL_HOST;
-const mysqlPort = process.env.MYSQL_PORT;
-const mysqlUser = process.env.MYSQL_USER;
-const mysqlPW = process.env.MYSQL_PASSWORD;
-const mysqlDB = process.env.MYSQL_DB;
 
 const app = express();
 app.use(cors());
@@ -28,32 +23,23 @@ app.use(express.urlencoded({ extended: true }));
 mongoose
   .connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then((result) => {
-    console.log('connected to mongoDB');
+    console.log('connected to mongoconnectio');
     // listen for requests
   })
   .catch((err) => console.log(err.message));
 
-const db = mysql.createConnection({
-  host: mysqlHost,
-  user: mysqlUser,
-  password: mysqlPW,
-  database: mysqlDB,
-  port: mysqlPort,
-  ssl: {
-    ca: fs.readFileSync('./BaltimoreCyberTrustRoot.crt.pem'),
-  },
-});
-
-db.connect((err) => {
+connection.getConnection((err, connect) => {
   if (err) {
     console.error('error connecting: ' + err.stack);
     return;
   }
   console.log('connected to mySQL');
+  connect.release();
 });
 
 // routes
 app.use('/api/chat', chatRoutes);
+app.use('/api/', sqlRoutes);
 
 app.get('/test', (req, res) => {
   res.send('Hello World');
@@ -87,19 +73,3 @@ app.listen(port, () => {
 });
 
 // ----------------------------------------------------------------------------------------
-
-const yourRides =
-  'SELECT route, starting_time, max_available_seats, reserved_passengers FROM ride WHERE driver_id = ?';
-
-app.post('/api/rides', (req, res) => {
-  const id = req.body.id;
-
-  connection.query(yourRides, id, (err, result) => {
-    if (err) {
-      res.status(500);
-      return;
-    }
-
-    res.json(result);
-  });
-});
