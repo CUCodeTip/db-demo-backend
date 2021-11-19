@@ -4,13 +4,14 @@ const mysql = require('mysql');
 const fs = require('fs');
 const chatRoutes = require('./routes/chatroomRoutes');
 
-// enviroment variable
+// environment variable
 require('dotenv').config();
 
 // process.env.PORT
 const mongoUri = process.env.MONGO_URI;
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 const mysqlHost = process.env.MYSQL_HOST;
+const mysqlPort = process.env.MYSQL_PORT;
 const mysqlUser = process.env.MYSQL_USER;
 const mysqlPW = process.env.MYSQL_PASSWORD;
 const mysqlDB = process.env.MYSQL_DB;
@@ -30,7 +31,7 @@ const connection = mysql.createConnection({
   user: mysqlUser,
   password: mysqlPW,
   database: mysqlDB,
-  port: port,
+  port: mysqlPort,
   ssl: {
     ca: fs.readFileSync('./BaltimoreCyberTrustRoot.crt.pem'),
   },
@@ -44,10 +45,16 @@ connection.connect((err) => {
   console.log('connected to mySQL');
 });
 
-app.listen(3000);
-
 // middlewares
 app.use(express.urlencoded({ extended: true }));
 
 // routes
 app.use('/api/chat', chatRoutes);
+
+app.get('/test', (req, res) => {
+  res.send('Hello World');
+});
+
+app.listen(port, () => {
+  console.log(`listening on port ${port}`);
+});

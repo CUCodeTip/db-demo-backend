@@ -1,7 +1,10 @@
 # Database-project-demo-backend
-A term project website for database system (2110322) academic year 2021
+
+A term project website for database system (2110322) academic year 2021  
+Base url: <https://dumb-db-api.herokuapp.com/>
 
 ## Get started
+
 - Install MongoDB
 - Install Mysql
 - Install Prettier extensions
@@ -10,9 +13,11 @@ A term project website for database system (2110322) academic year 2021
 - set variables in `.env` file look at the `.env.example`
 
 ## API documentation
+
 - will update soon...
 
 ## Other
+
 - if you don't want to restart node server everytime you update code files, you can use **nodemon**. <br>
   to start the server run command `nodemon index.js`
-- learn more about nodemon at https://www.npmjs.com/package/nodemon
+- learn more about nodemon at <https://www.npmjs.com/package/nodemon>
