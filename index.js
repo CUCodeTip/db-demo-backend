@@ -33,7 +33,7 @@ mongoose
   })
   .catch((err) => console.log(err.message));
 
-const connection = mysql.createConnection({
+const db = mysql.createConnection({
   host: mysqlHost,
   user: mysqlUser,
   password: mysqlPW,
@@ -44,7 +44,7 @@ const connection = mysql.createConnection({
   },
 });
 
-connection.connect((err) => {
+db.connect((err) => {
   if (err) {
     console.error('error connecting: ' + err.stack);
     return;
@@ -57,6 +57,28 @@ app.use('/api/chat', chatRoutes);
 
 app.get('/test', (req, res) => {
   res.send('Hello World');
+});
+
+// login route
+app.post('/api/login', (req, res) => {
+  const data = req.body;
+  db.query(
+    'SELECT * FROM passenger WHERE user_id = ?',
+    [data.userId],
+    (err, result) => {
+      if (err) {
+        console.log(err.message);
+        res.status(404).send('Error');
+        return;
+      }
+      if (result && result.length > 0) {
+        console.log(data.userId, 'has just login');
+        res.json(result[0]);
+        return;
+      }
+      res.status(401).send('Not found');
+    }
+  );
 });
 
 app.listen(port, () => {
