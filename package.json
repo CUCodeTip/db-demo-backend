@@ -4,7 +4,7 @@
   "description": "A term project for Database System (2110322) Academic Year 2021",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon index.js"
   },
   "author": "CodeTip",
   "license": "ISC",
@@ -17,5 +17,8 @@
   "devDependencies": {
     "nodemon": "^2.0.15",
     "prettier": "^2.4.1"
+  },
+  "engines": {
+    "node": ">=16.6.0"
   }
 }
