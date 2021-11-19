@@ -48,7 +48,7 @@ app.get('/test', (req, res) => {
 // login route
 app.post('/api/login', (req, res) => {
   const data = req.body;
-  db.query(
+  connection.query(
     'SELECT * FROM passenger P LEFT JOIN driver D\
      ON P.user_id = D.user_id WHERE P.user_id = ?',
     [data.userId],
