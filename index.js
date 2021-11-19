@@ -74,7 +74,7 @@ app.post('/api/login', (req, res) => {
         res.json(result);
         return;
       }
-      res.send('Not found');
+      res.status(401).send('Not found');
     }
   );
 });
