@@ -15,6 +15,7 @@ const mysqlPW = process.env.MYSQL_PASSWORD;
 const mysqlDB = process.env.MYSQL_DB;
 
 const app = express();
+const port = process.env.PORT || 3000;
 
 mongoose
   .connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -43,4 +44,6 @@ connection.connect((err) => {
   console.log('connected to mySQL');
 });
 
-app.listen(3000);
+app.listen(port, () => {
+  console.log(`listening on port ${port}`);
+});
