@@ -19,6 +19,11 @@ const mysqlPW = process.env.MYSQL_PASSWORD;
 const mysqlDB = process.env.MYSQL_DB;
 
 const app = express();
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// ------------------------------  Database connection  ------------------------------------
 
 mongoose
   .connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -47,10 +52,6 @@ connection.connect((err) => {
   console.log('connected to mySQL');
 });
 
-// middlewares
-app.use(express.urlencoded({ extended: true }));
-app.use(cors());
-
 // routes
 app.use('/api/chat', chatRoutes);
 
@@ -60,4 +61,22 @@ app.get('/test', (req, res) => {
 
 app.listen(port, () => {
   console.log(`listening on port ${port}`);
+});
+
+// ----------------------------------------------------------------------------------------
+
+const yourRides =
+  'SELECT route, starting_time, max_available_seats, reserved_passengers FROM ride WHERE driver_id = ?';
+
+app.post('/api/rides', (req, res) => {
+  const id = req.body.id;
+
+  connection.query(yourRides, id, (err, result) => {
+    if (err) {
+      res.status(500);
+      return;
+    }
+
+    res.json(result);
+  });
 });
