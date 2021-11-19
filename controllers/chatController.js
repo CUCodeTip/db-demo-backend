@@ -5,7 +5,7 @@ const chat_get_chats = (req, res) => {
   if (Object.keys(req.body).length > 0) {
     const ids = JSON.parse(req.body.ids);
     Chat.find({ _id: { $in: ids } }, { title: 1, _id: 1 })
-      .then((result) => res.send(result))
+      .then((result) => res.json(result))
       .catch((err) => {
         console.log(err.message);
         res.status(404).send('request error');
@@ -15,7 +15,7 @@ const chat_get_chats = (req, res) => {
   Chat.find()
     .sort({ createAt: -1 })
     .then((result) => {
-      res.send(result);
+      res.json(result);
     })
     .catch((err) => {
       console.log(err);
@@ -28,7 +28,7 @@ const chat_create_chat = async (req, res) => {
     const title = req.body.title;
     const chatroom = new Chat({ title });
     await chatroom.save();
-    res.status(201).send('Chat created!!');
+    res.status(201).send('Chat created!!' + chatroom._id);
   } catch (err) {
     console.log(err.message);
     res.status(400).send('request error');
@@ -50,7 +50,7 @@ const chat_get_single_chat = (req, res) => {
         return a.createdAt < b.createAt ? -1 : 1;
       });
       const sortedResult = { id, title, messages };
-      res.send(sortedResult);
+      res.json(sortedResult);
     })
     .catch((err) => {
       console.log(err.message);
