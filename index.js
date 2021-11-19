@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const mysql = require('mysql');
 const fs = require('fs');
 
-// enviroment variable
+// environment variable
 require('dotenv').config();
 
 // process.env.PORT
