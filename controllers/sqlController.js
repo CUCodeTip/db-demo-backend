@@ -1,7 +1,7 @@
 const connection = require('../mySQL');
 
 const yourRides =
-  'SELECT route, starting_time, max_available_seats, reserved_passengers FROM ride WHERE driver_id = ?';
+  'SELECT route, starting_time, ride_status, max_available_seats, reserved_passengers FROM ride WHERE driver_id = ?';
 
 const yourRide = (req, res) => {
   const id = req.body.id;
