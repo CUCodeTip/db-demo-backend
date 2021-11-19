@@ -8,14 +8,14 @@ require('dotenv').config();
 
 // process.env.PORT
 const mongoUri = process.env.MONGO_URI;
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 const mysqlHost = process.env.MYSQL_HOST;
+const mysqlPort = process.env.MYSQL_PORT;
 const mysqlUser = process.env.MYSQL_USER;
 const mysqlPW = process.env.MYSQL_PASSWORD;
 const mysqlDB = process.env.MYSQL_DB;
 
 const app = express();
-const port = process.env.PORT || 3000;
 
 mongoose
   .connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -30,7 +30,7 @@ const connection = mysql.createConnection({
   user: mysqlUser,
   password: mysqlPW,
   database: mysqlDB,
-  port: port,
+  port: mysqlPort,
   ssl: {
     ca: fs.readFileSync('./BaltimoreCyberTrustRoot.crt.pem'),
   },
