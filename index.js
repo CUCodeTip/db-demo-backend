@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const mysql = require('mysql');
+const cors = require('cors');
 const fs = require('fs');
 
 const chatRoutes = require('./routes/chatroomRoutes');
@@ -48,6 +49,7 @@ connection.connect((err) => {
 
 // middlewares
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 // routes
 app.use('/api/chat', chatRoutes);
