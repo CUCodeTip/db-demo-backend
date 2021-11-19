@@ -1,5 +1,6 @@
 const mysql = require('mysql');
 const fs = require('fs');
+
 require('dotenv').config();
 
 const mysqlHost = process.env.MYSQL_HOST;
@@ -15,7 +16,7 @@ const connection = mysql.createPool({
   database: mysqlDB,
   port: mysqlPort,
   ssl: {
-    ca: fs.readFileSync('../BaltimoreCyberTrustRoot.crt.pem'),
+    ca: fs.readFileSync('./BaltimoreCyberTrustRoot.crt.pem'),
   },
 });
 
