@@ -10,7 +10,7 @@ const yourBooking = (req, res) => {
 
   connection.query(getBooking, [userId], (err, result) => {
     if (err) {
-      res.status(500).send(err);
+      res.status(400).send(err);
       return;
     }
 
@@ -46,14 +46,16 @@ const create_ride = (req, res) => {
       (err, result) => {
         if (err) {
           console.log(err.message);
-          res.sendStatus(401);
+          if (err.message.includes('ER_DUP_ENTRY'))
+            res.status(400).send('Aready have ride at this time');
+          else res.sendStatus(401);
           return;
         }
 
         chatroom
           .save()
           .then(() => res.sendStatus(200))
-          .catch(() => res.sendStatus(401));
+          .catch(() => res.sendStatus(400));
       }
     );
   } catch (err) {
@@ -64,15 +66,19 @@ const create_ride = (req, res) => {
 };
 
 const find_rides = (req, res) => {
-  let { startingTime, endTime, requestSeats } = req.body;
+  try {
+    let { startingTime, endTime, requestSeats } = req.body;
 
-  // change js date format to mysql date formant
-  startTime = new Date(startTime).toISOString().slice(0, 19).replace('T', ' ');
-  endTime = new Date(endTime).toISOString().slice(0, 19).replace('T', ' ');
-  requestSeats = Number(requestSeats);
+    // change js date format to mysql date formant
+    startTime = new Date(startingTime)
+      .toISOString()
+      .slice(0, 19)
+      .replace('T', ' ');
+    endTime = new Date(endTime).toISOString().slice(0, 19).replace('T', ' ');
+    requestSeats = Number(requestSeats);
 
-  const query =
-    "SELECT\
+    const query =
+      "SELECT\
           p.name,\
           r.max_available_seats,\
           r.reserved_passengers,\
@@ -88,14 +94,22 @@ const find_rides = (req, res) => {
           ) r\
       ON p.user_id = r.driver_id";
 
-  connection.query(query, [startTime, endTime, requestSeats], (err, result) => {
-    if (err) {
-      res.sendStatus(401);
-      return;
-    }
+    connection.query(
+      query,
+      [startTime, endTime, requestSeats],
+      (err, result) => {
+        if (err) {
+          res.sendStatus(404);
+          return;
+        }
 
-    res.json(result);
-  });
+        res.json(result);
+      }
+    );
+  } catch (err) {
+    console.log(err.message);
+    res.sendStatus(400);
+  }
 };
 
 const get_your_rides = (req, res) => {
@@ -105,11 +119,11 @@ const get_your_rides = (req, res) => {
     'SELECT route, starting_time, max_available_seats, reserved_passengers, ride_status\
     FROM ride\
     WHERE driver_id = ?\
-    ORDER BY ride_status DESC, starting_time DESC';
+    ORDER BY ride_status, starting_time DESC';
 
   connection.query(yourRides, [id], (err, result) => {
     if (err) {
-      res.sendStatus(401);
+      res.sendStatus(404);
       return;
     }
 
