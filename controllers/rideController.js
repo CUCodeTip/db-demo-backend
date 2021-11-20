@@ -1,41 +1,52 @@
 const connection = require('../db/mySQL');
 const Chat = require('../models/chatroom');
 
-const create_ride = async (req, res) => {
+const create_ride = (req, res) => {
   try {
     const { driverName, driverId, startingTime, route, maxSeats } = req.body;
 
     // Create new chat room
     const title = driverName + "'s Ride";
     const chatroom = new Chat({ title });
-    await chatroom.save();
-    const chatId = chatroom._id;
+    const chatId = chatroom._id.toString();
+
+    // prase data to its correct type
+    const starting_time = new Date(startingTime)
+      .toISOString()
+      .slice(0, 19)
+      .replace('T', ' ');
+    const max_available_seats = Number(maxSeats);
+    const driver_id = Number(driverId);
 
     // Insert new ride to database
     const query =
-      "INSERT INTO ride (driver_id, starting_time, chat_id, route, ride_status, max_available_seats )\
+      "INSERT INTO ride (driver_id, starting_time, chat_id, route, ride_status, max_available_seats)\
         VALUES(?, ?, ?, ?, 'available', ?)";
     connection.query(
       query,
-      [driverId, startingTime, chatId, route, maxSeats],
+      [driver_id, starting_time, chatId, route, max_available_seats],
       (err, result) => {
         if (err) {
+          console.log(err.message);
           res.sendStatus(401);
           return;
         }
 
-        res.sendStatus(200);
+        chatroom
+          .save()
+          .then(() => res.sendStatus(200))
+          .catch(() => res.sendStatus(401));
       }
     );
   } catch (err) {
     console.log(err.message);
-    res.sendStatus(401);
+    res.sendStatus(400);
     return;
   }
 };
 
 const find_rides = (req, res) => {
-  let { startTime, endTime, requestSeats } = req.body;
+  let { startingTime, endTime, requestSeats } = req.body;
 
   // change js date format to mysql date formant
   startTime = new Date(startTime).toISOString().slice(0, 19).replace('T', ' ');
