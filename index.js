@@ -4,7 +4,7 @@ const connection = require('./db/mySQL');
 const cors = require('cors');
 
 const chatRoutes = require('./routes/chatroomRoutes');
-const sqlRoutes = require('./routes/sqlRoutes');
+const sqlRoutes = require('./routes/rideRoutes');
 
 // environment variable
 require('dotenv').config();
@@ -48,24 +48,32 @@ app.get('/test', (req, res) => {
 // login route
 app.post('/api/login', (req, res) => {
   const data = req.body;
-  db.query(
-    'SELECT * FROM passenger P LEFT JOIN driver D\
-     ON P.user_id = D.user_id WHERE P.user_id = ?',
-    [data.userId],
-    (err, result) => {
-      if (err) {
-        console.log(err.message);
-        res.status(404).send('Error');
-        return;
-      }
-      if (result && result.length > 0) {
-        console.log(data.userId, 'has just login');
-        res.json(result[0]);
-        return;
-      }
-      res.status(401).send('Not found');
+  const query =
+    'SELECT\
+    p.user_id,\
+    p.name,\
+    p.gender,\
+    p.birth_date,\
+    p.phone_number,\
+    p.email,\
+    p.money_amount,\
+    d.license_plate\
+  FROM passenger p LEFT JOIN driver d\
+  ON p.user_id = d.user_id WHERE P.user_id = ?';
+
+  connection.query(query, [data.userId], (err, result) => {
+    if (err) {
+      console.log(err.message);
+      res.status(404).send('Error');
+      return;
     }
-  );
+    if (result && result.length > 0) {
+      console.log('UserId', data.userId, 'has just login');
+      res.json(result[0]);
+      return;
+    }
+    res.status(401).send('Not found');
+  });
 });
 
 app.listen(port, () => {
