@@ -73,6 +73,7 @@ const chat_get_joining_chats = (req, res) => {
           const chat = {
             chat_id: ride.chat_id,
             driver_name: ride.name,
+            driver_id: ride.user_id,
             starting_time: ride.starting_time,
             max_available_seats: ride.max_available_seats,
             reserved_passengers: ride.reserved_passengers,
