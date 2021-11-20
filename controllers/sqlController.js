@@ -3,7 +3,7 @@ const Chat = require('../models/chatroom');
 
 // ------------------------------  booking table  ------------------------------------
 const getBooking = `SELECT p.name, data.max_available_seats, data.reserved_passengers, data.starting_time, data.pickup_location,
-  data.dropoff_location, CASE WHEN data.ride_status IN ('available', 'full') THEN 'booked'WHEN data.ride_status = 'cancelled' THEN 'ride cancel' ELSE data.ride_status END AS booking_status FROM passenger p JOIN( SELECT * FROM booking b JOIN ride r USING (driver_id, starting_time) WHERE b.passenger_id = ?) data ON p.user_id = data.driver_id;`;
+  data.dropoff_location, CASE WHEN data.ride_status IN ('available', 'full') THEN 'booked'WHEN data.ride_status = 'cancelled' THEN 'ride cancel' ELSE data.ride_status END AS booking_status FROM passenger p JOIN( SELECT * FROM booking b JOIN ride r USING (driver_id, starting_time) WHERE b.passenger_id = ?) data ON p.user_id = data.driver_id ORDER BY data.starting_time;`;
 
 const yourBooking = (req, res) => {
   const userId = req.body.userId;
