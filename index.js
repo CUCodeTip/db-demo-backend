@@ -48,24 +48,21 @@ app.get('/test', (req, res) => {
 // login route
 app.post('/api/login', (req, res) => {
   const data = req.body;
-  connection.query(
-    'SELECT * FROM passenger P LEFT JOIN driver D\
-     ON P.user_id = D.user_id WHERE P.user_id = ?',
-    [data.userId],
-    (err, result) => {
-      if (err) {
-        console.log(err.message);
-        res.status(404).send('Error');
-        return;
-      }
-      if (result && result.length > 0) {
-        console.log(data.userId, 'has just login');
-        res.json(result[0]);
-        return;
-      }
-      res.status(401).send('Not found');
+  const query = 'CALL UserInformation(?, True);';
+
+  connection.query(query, [data.userId], (err, result) => {
+    if (err) {
+      console.log(err.message);
+      res.status(404).send('Error');
+      return;
     }
-  );
+    if (result && result.length > 0) {
+      console.log('UserId', data.userId, 'has just login');
+      res.json(result[0][0]);
+      return;
+    }
+    res.status(401).send('Not found');
+  });
 });
 
 app.listen(port, () => {
