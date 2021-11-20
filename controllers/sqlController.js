@@ -23,7 +23,7 @@ const yourBooking = (req, res) => {
     USING (driver_id, starting_time) 
     WHERE b.passenger_id = ?) data 
   ON p.user_id = data.driver_id 
-  ORDER BY data.ride_status, data.starting_time;`;
+  ORDER BY data.ride_status, data.starting_time DESC;`;
 
   connection.query(getBooking, [userId], (err, result) => {
     if (err) {
@@ -176,7 +176,7 @@ const get_your_rides = (req, res) => {
     'SELECT route, starting_time, max_available_seats, reserved_passengers, ride_status\
     FROM ride\
     WHERE driver_id = ?\
-    ORDER BY ride_status, starting_time';
+    ORDER BY ride_status, starting_time DESC';
 
   connection.query(yourRides, [id], (err, result) => {
     if (err) {
