@@ -144,12 +144,18 @@ const genBook = (req, res) => {
   const dropoff_location = req.body.dropoff_location;
   const seat = req.body.seat;
 
+  // format time before query mySql
+  const startTime = new Date(starting_time)
+    .toISOString()
+    .slice(0, 19)
+    .replace('T', ' ');
+
   connection.query(
     createBook,
     [
       passenger_id,
       driver_id,
-      starting_time,
+      startTime,
       pickup_location,
       dropoff_location,
       seat,
