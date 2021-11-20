@@ -4,7 +4,7 @@ const connection = require('./mySQL');
 const cors = require('cors');
 
 const chatRoutes = require('./routes/chatroomRoutes');
-const sqlRoutes = require('./routes/rideRoutes');
+const sqlRoutes = require('./routes/sqlRoutes');
 
 // environment variable
 require('dotenv').config();

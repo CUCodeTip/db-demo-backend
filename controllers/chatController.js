@@ -1,5 +1,5 @@
 const Chat = require('../models/chatroom');
-const connection = require('../db/mySQL');
+const connection = require('../mySQL');
 
 // logics
 const getRideWithChatId = (chatId, rides) => {
