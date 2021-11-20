@@ -16,7 +16,7 @@ const connection = mysql.createPool({
   database: mysqlDB,
   port: mysqlPort,
   ssl: {
-    ca: fs.readFileSync('./BaltimoreCyberTrustRoot.crt.pem'),
+    ca: fs.readFileSync('./DigiCertGlobalRootCA.crt.pem'),
   },
 });
 
