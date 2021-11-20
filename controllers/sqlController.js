@@ -93,7 +93,8 @@ const find_rides = (req, res) => {
               AND DATE_FORMAT(starting_time, '%Y-%m-%d') BETWEEN ? AND ?\
               AND (max_available_seats - reserved_passengers) >= ?\
           ) r\
-      ON p.user_id = r.driver_id";
+      ON p.user_id = r.driver_id\
+      ORDER BY r.starting_time";
 
     connection.query(
       query,
@@ -120,7 +121,7 @@ const get_your_rides = (req, res) => {
     'SELECT route, starting_time, max_available_seats, reserved_passengers, ride_status\
     FROM ride\
     WHERE driver_id = ?\
-    ORDER BY ride_status, starting_time DESC';
+    ORDER BY ride_status, starting_time';
 
   connection.query(yourRides, [id], (err, result) => {
     if (err) {
