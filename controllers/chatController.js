@@ -20,20 +20,27 @@ const chat_get_chats = (req, res) => {
     });
 };
 
+// this will return for both as a passenger and a driver;
 const chat_get_joining_chats = (req, res) => {
   const userId = req.body.userId;
   const query =
     'SELECT\
-    data.chat_id,\
-    data.starting_time,\
-    data.max_available_seats,\
-    data.reserved_passengers\
+        p.name,\
+        data.driver_id AS user_id,\
+        data.starting_time,\
+        data.chat_id,\
+        data.route,\
+        data.ride_status,\
+        data.max_available_seats,\
+        data.reserved_passengers\
     FROM passenger p\
     JOIN(\
         SELECT\
             r1.driver_id,\
-            r1.chat_id,\
             r1.starting_time,\
+            r1.chat_id,\
+            r1.route,\
+            r1.ride_status,\
             r1.max_available_seats,\
             r1.reserved_passengers\
         FROM booking b \
@@ -42,11 +49,7 @@ const chat_get_joining_chats = (req, res) => {
         WHERE b.passenger_id = ?\
         UNION\
         SELECT\
-            r2.driver_id,\
-            r2.chat_id,\
-            r2.starting_time,\
-            r2.max_available_seats,\
-            r2.reserved_passengers\
+            *\
         FROM ride r2\
         WHERE r2.driver_id = ?\
         ) data\
@@ -59,7 +62,7 @@ const chat_get_joining_chats = (req, res) => {
     }
     // get chats from mongos
     const ids = result.map((ride) => ride.chat_id);
-    Chat.find({ _id: { $in: ids } }, { title: 1, _id: 1, messages: 1 })
+    Chat.find({ _id: { $in: ids } }, { _id: 1, messages: 1 })
       .then((data) => {
         // data to be send to the request client
         const chats = data.map((value) => {
@@ -69,7 +72,7 @@ const chat_get_joining_chats = (req, res) => {
 
           const chat = {
             chat_id: ride.chat_id,
-            title: value.title,
+            driver_name: ride.name,
             starting_time: ride.starting_time,
             max_available_seats: ride.max_available_seats,
             reserved_passengers: ride.reserved_passengers,
