@@ -2,7 +2,6 @@ const express = require('express');
 const sqlController = require('../controllers/sqlController');
 const router = express.Router();
 
-router.post('/books', sqlController.yourBooking);
 router.post('/bookRide', sqlController.genBook);
 router.post('/book', sqlController.yourBooking);
 router.get('/rides', sqlController.get_your_rides);

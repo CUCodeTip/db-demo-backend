@@ -152,7 +152,7 @@ const chat_delete_chat = (req, res) => {
   const id = req.query.ChatId;
   Chat.findByIdAndDelete(id)
     .then((result) => {
-      res.status(202);
+      res.sendStatus(202);
     })
     .catch((err) => {
       console.log(err.message);

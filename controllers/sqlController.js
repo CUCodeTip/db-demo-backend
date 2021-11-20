@@ -2,13 +2,28 @@ const connection = require('../mySQL');
 const Chat = require('../models/chatroom');
 
 // ------------------------------  booking table  ------------------------------------
-const getBooking = `SELECT p.name, data.max_available_seats, data.reserved_passengers, data.starting_time, data.pickup_location,
-  data.dropoff_location, CASE WHEN data.ride_status IN ('available', 'full') THEN 'booked'WHEN data.ride_status = 'cancelled' THEN 'ride cancel' ELSE data.ride_status END AS booking_status FROM passenger p JOIN( SELECT * FROM booking b JOIN ride r USING (driver_id, starting_time) WHERE b.passenger_id = ?) data ON p.user_id = data.driver_id ORDER BY data.starting_time;`;
-
-const createBook = 'call generateBook(?, ?, ?, ?, ?, ?)';
-
 const yourBooking = (req, res) => {
   const userId = req.body.userId;
+
+  const getBooking = `SELECT 
+    p.name,
+    data.max_available_seats,
+    data.reserved_passengers,
+    data.starting_time,
+    data.pickup_location,
+    data.dropoff_location,
+  CASE
+    WHEN data.ride_status IN ('available', 'full') THEN 'booked'
+    WHEN data.ride_status = 'cancelled' THEN 'ride cancel'
+    ELSE data.ride_status
+  END AS booking_status
+  FROM passenger p JOIN
+    ( SELECT * 
+    FROM booking b JOIN ride r 
+    USING (driver_id, starting_time) 
+    WHERE b.passenger_id = ?) data 
+  ON p.user_id = data.driver_id 
+  ORDER BY data.ride_status, data.starting_time;`;
 
   connection.query(getBooking, [userId], (err, result) => {
     if (err) {
@@ -18,6 +33,43 @@ const yourBooking = (req, res) => {
 
     res.json(result);
   });
+};
+
+const genBook = (req, res) => {
+  const createBook = 'call generateBook(?, ?, ?, ?, ?, ?)';
+
+  const passenger_id = req.body.passenger_id;
+  const driver_id = req.body.driver_id;
+  const starting_time = req.body.starting_time;
+  const pickup_location = req.body.pickup_location;
+  const dropoff_location = req.body.dropoff_location;
+  const seat = req.body.seat;
+
+  // format time before query mySql
+  const startTime = new Date(starting_time)
+    .toISOString()
+    .slice(0, 19)
+    .replace('T', ' ');
+
+  connection.query(
+    createBook,
+    [
+      passenger_id,
+      driver_id,
+      startTime,
+      pickup_location,
+      dropoff_location,
+      seat,
+    ],
+    (err, result) => {
+      if (err) {
+        res.status(500).send(err);
+        return;
+      }
+      console.log('completed');
+      res.json(result);
+    }
+  );
 };
 
 // ------------------------------  ride table  ------------------------------------
@@ -134,41 +186,6 @@ const get_your_rides = (req, res) => {
 
     res.json(result);
   });
-};
-
-const genBook = (req, res) => {
-  const passenger_id = req.body.passenger_id;
-  const driver_id = req.body.driver_id;
-  const starting_time = req.body.starting_time;
-  const pickup_location = req.body.pickup_location;
-  const dropoff_location = req.body.dropoff_location;
-  const seat = req.body.seat;
-
-  // format time before query mySql
-  const startTime = new Date(starting_time)
-    .toISOString()
-    .slice(0, 19)
-    .replace('T', ' ');
-
-  connection.query(
-    createBook,
-    [
-      passenger_id,
-      driver_id,
-      startTime,
-      pickup_location,
-      dropoff_location,
-      seat,
-    ],
-    (err, result) => {
-      if (err) {
-        res.status(500).send(err);
-        return;
-      }
-      console.log('completed');
-      res.json(result);
-    }
-  );
 };
 
 module.exports = {
