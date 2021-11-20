@@ -7,6 +7,7 @@ const yourBooking = (req, res) => {
 
   const getBooking = `SELECT 
     p.name,
+    data.booking_id,
     data.max_available_seats,
     data.reserved_passengers,
     data.starting_time,
