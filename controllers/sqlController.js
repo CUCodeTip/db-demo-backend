@@ -67,7 +67,7 @@ const create_ride = (req, res) => {
 
 const find_rides = (req, res) => {
   try {
-    let { startingTime, endTime, requestSeats } = req.body;
+    let { userId, startingTime, endTime, requestSeats } = req.body;
 
     // change js date format to mysql date formant
     startTime = new Date(startingTime)
@@ -92,13 +92,14 @@ const find_rides = (req, res) => {
           WHERE ride_status = 'available'\
               AND DATE_FORMAT(starting_time, '%Y-%m-%d') BETWEEN ? AND ?\
               AND (max_available_seats - reserved_passengers) >= ?\
+              AND driver_id != ?\
           ) r\
       ON p.user_id = r.driver_id\
       ORDER BY r.starting_time";
 
     connection.query(
       query,
-      [startTime, endTime, requestSeats],
+      [startTime, endTime, requestSeats, userId],
       (err, result) => {
         if (err) {
           res.sendStatus(404);
