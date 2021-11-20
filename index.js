@@ -23,7 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 mongoose
   .connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then((result) => {
-    console.log('connected to mongoconnectio');
+    console.log('connected to mongodb');
     // listen for requests
   })
   .catch((err) => console.log(err.message));
