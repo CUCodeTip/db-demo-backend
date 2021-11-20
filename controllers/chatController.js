@@ -74,7 +74,9 @@ const chat_get_joining_chats = (req, res) => {
             max_available_seats: ride.max_available_seats,
             reserved_passengers: ride.reserved_passengers,
             recentMessage:
-              value.messages.length > 0 ? value.messages[0] : undefined,
+              value.messages.length > 0
+                ? value.messages[value.messages.length - 1]
+                : undefined,
           };
           return chat;
         });
