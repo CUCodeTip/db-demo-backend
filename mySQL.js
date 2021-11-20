@@ -1,5 +1,6 @@
 const mysql = require('mysql');
 const fs = require('fs');
+
 require('dotenv').config();
 
 const mysqlHost = process.env.MYSQL_HOST;

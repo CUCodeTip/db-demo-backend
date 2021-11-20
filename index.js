@@ -49,7 +49,8 @@ app.get('/test', (req, res) => {
 app.post('/api/login', (req, res) => {
   const data = req.body;
   connection.query(
-    'SELECT * FROM passenger WHERE user_id = ?',
+    'SELECT * FROM passenger P LEFT JOIN driver D\
+     ON P.user_id = D.user_id WHERE P.user_id = ?',
     [data.userId],
     (err, result) => {
       if (err) {
