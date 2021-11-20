@@ -48,18 +48,7 @@ app.get('/test', (req, res) => {
 // login route
 app.post('/api/login', (req, res) => {
   const data = req.body;
-  const query =
-    'SELECT\
-    p.user_id,\
-    p.name,\
-    p.gender,\
-    p.birth_date,\
-    p.phone_number,\
-    p.email,\
-    p.money_amount,\
-    d.license_plate\
-  FROM passenger p LEFT JOIN driver d\
-  ON p.user_id = d.user_id WHERE P.user_id = ?';
+  const query = 'CALL UserInformation(?, True);';
 
   connection.query(query, [data.userId], (err, result) => {
     if (err) {
