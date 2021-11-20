@@ -73,6 +73,10 @@ const genBook = (req, res) => {
   );
 };
 
+const deleteBook = (req, res) => {
+  res.sendStatus(200);
+};
+
 // ------------------------------  ride table  ------------------------------------
 const create_ride = (req, res) => {
   try {
@@ -192,6 +196,7 @@ const get_your_rides = (req, res) => {
 module.exports = {
   yourBooking,
   genBook,
+  deleteBook,
   create_ride,
   get_your_rides,
   find_rides,
