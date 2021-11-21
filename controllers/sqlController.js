@@ -137,38 +137,40 @@ const create_ride = (req, res) => {
 const find_rides = (req, res) => {
   try {
     let { userId, startingTime, endTime, requestSeats } = req.body;
-
     // change js date format to mysql date formant
-    startTime = new Date(startingTime)
-      .toISOString()
-      .slice(0, 19)
-      .replace('T', ' ');
-    endTime = new Date(endTime).toISOString().slice(0, 19).replace('T', ' ');
+    startingTime = new Date(startingTime).toISOString().slice(0, 10);
+    endTime = new Date(endTime).toISOString().slice(0, 10);
     requestSeats = Number(requestSeats);
 
-    const query =
-      "SELECT\
-          p.name,\
-          r.driver_id,\
-          r.max_available_seats,\
-          r.reserved_passengers,\
-          r.starting_time,\
-          r.route\
-      FROM passenger p\
-      JOIN(\
-          SELECT *\
-          FROM ride\
-          WHERE ride_status = 'available'\
-              AND DATE_FORMAT(starting_time, '%Y-%m-%d') BETWEEN ? AND ?\
-              AND (max_available_seats - reserved_passengers) >= ?\
-              AND driver_id != ?\
-          ) r\
-      ON p.user_id = r.driver_id\
-      ORDER BY r.starting_time";
+    console.log(startingTime, ' ', endTime);
+    const query = `SELECT 
+        p.name,
+        r.max_available_seats,
+        r.reserved_passengers,
+        r.starting_time,
+        r.route
+    FROM passenger p
+    JOIN(
+      SELECT *
+      FROM ride temp
+      WHERE ride_status = 'available'
+        AND DATE_FORMAT(starting_time, '%Y-%m-%d') BETWEEN "2021-10-21" AND "2021-12-21"
+        AND (max_available_seats - reserved_passengers) >= 1
+        AND driver_id != 4
+        AND NOT EXISTS (
+          SELECT *
+          FROM booking b
+          WHERE b.passenger_id = 4
+            AND b.driver_id = temp.driver_id 
+            AND b.starting_time = temp.starting_time
+        )
+        ) r
+    ON p.user_id = r.driver_id
+    ORDER BY r.starting_time;`;
 
     connection.query(
       query,
-      [startTime, endTime, requestSeats, userId],
+      [startingTime, endTime, requestSeats, userId],
       (err, result) => {
         if (err) {
           res.sendStatus(404);
