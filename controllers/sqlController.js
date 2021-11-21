@@ -144,6 +144,7 @@ const find_rides = (req, res) => {
     console.log(startingTime, ' ', endTime);
     const query = `SELECT 
         p.name,
+        r.driver_id,
         r.max_available_seats,
         r.reserved_passengers,
         r.starting_time,
