@@ -13,11 +13,7 @@ const yourBooking = (req, res) => {
     data.starting_time,
     data.pickup_location,
     data.dropoff_location,
-  CASE
-    WHEN data.ride_status IN ('available', 'full') THEN 'booked'
-    WHEN data.ride_status = 'cancelled' THEN 'ride cancel'
-    ELSE data.ride_status
-  END AS booking_status
+    BookingStatus(data.ride_status) AS booking_status
   FROM passenger p JOIN
     ( SELECT * 
     FROM booking b JOIN ride r 
@@ -155,7 +151,7 @@ const find_rides = (req, res) => {
       FROM ride temp
       WHERE ride_status = 'available'
         AND DATE_FORMAT(starting_time, '%Y-%m-%d') BETWEEN ? AND ?
-        AND (max_available_seats - reserved_passengers) >= ?
+        AND IsRideFull(?, reserved_passengers, max_available_seats)
         AND driver_id != ?
         AND NOT EXISTS (
           SELECT *
