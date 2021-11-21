@@ -23,37 +23,36 @@ const chat_get_chats = (req, res) => {
 // this will return for both as a passenger and a driver;
 const chat_get_joining_chats = (req, res) => {
   const userId = req.body.userId;
-  const query =
-    'SELECT\
-        p.name,\
-        data.driver_id AS user_id,\
-        data.starting_time,\
-        data.chat_id,\
-        data.route,\
-        data.ride_status,\
-        data.max_available_seats,\
-        data.reserved_passengers\
-    FROM passenger p\
-    JOIN(\
-        SELECT\
-            r1.driver_id,\
-            r1.starting_time,\
-            r1.chat_id,\
-            r1.route,\
-            r1.ride_status,\
-            r1.max_available_seats,\
-            r1.reserved_passengers\
-        FROM booking b \
-        JOIN ride r1\
-        USING (driver_id, starting_time)\
-        WHERE b.passenger_id = ?\
-        UNION\
-        SELECT\
-            *\
-        FROM ride r2\
-        WHERE r2.driver_id = ?\
-        ) data\
-    ON p.user_id = data.driver_id';
+  const query = `SELECT
+        p.name,
+        data.driver_id AS user_id,
+        data.starting_time,
+        data.chat_id,
+        data.route,
+        data.ride_status,
+        data.max_available_seats,
+        data.reserved_passengers
+    FROM passenger p
+    JOIN(
+        SELECT
+            r1.driver_id,
+            r1.starting_time,
+            r1.chat_id,
+            r1.route,
+            r1.ride_status,
+            r1.max_available_seats,
+            r1.reserved_passengers
+        FROM booking b
+        JOIN ride r1
+        USING (driver_id, starting_time)
+        WHERE b.passenger_id = ?
+        UNION
+        SELECT
+            *
+        FROM ride r2
+        WHERE r2.driver_id = ?
+        ) data
+    ON p.user_id = data.driver_id`;
 
   connection.query(query, [userId, userId], (err, result) => {
     if (err) {

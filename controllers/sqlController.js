@@ -106,9 +106,8 @@ const create_ride = (req, res) => {
     const driver_id = Number(driverId);
 
     // Insert new ride to database
-    const query =
-      "INSERT INTO ride (driver_id, starting_time, chat_id, route, ride_status, max_available_seats)\
-        VALUES(?, ?, ?, ?, 'available', ?)";
+    const query = `INSERT INTO ride (driver_id, starting_time, chat_id, route, ride_status, max_available_seats)\
+        VALUES(?, ?, ?, ?, 'available', ?)`;
     connection.query(
       query,
       [driver_id, starting_time, chatId, route, max_available_seats],
@@ -189,11 +188,10 @@ const find_rides = (req, res) => {
 const get_your_rides = (req, res) => {
   const id = req.query.id;
 
-  const yourRides =
-    'SELECT route, starting_time, max_available_seats, reserved_passengers, ride_status\
+  const yourRides = `SELECT route, starting_time, max_available_seats, reserved_passengers, ride_status\
     FROM ride\
     WHERE driver_id = ?\
-    ORDER BY ride_status, starting_time DESC';
+    ORDER BY ride_status, starting_time DESC`;
 
   connection.query(yourRides, [id], (err, result) => {
     if (err) {
