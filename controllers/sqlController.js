@@ -67,14 +67,24 @@ const genBook = (req, res) => {
         res.status(500).send(err);
         return;
       }
-      console.log('completed');
+
       res.json(result);
     }
   );
 };
 
 const deleteBook = (req, res) => {
-  res.sendStatus(200);
+  const delBooking = 'call cancelBook(?)';
+
+  const bookingID = req.body.bookingID;
+  connection.query(delBooking, bookingID, (err, result) => {
+    if (err) {
+      res.status(500).send(err);
+      return;
+    }
+
+    res.json(result);
+  });
 };
 
 // ------------------------------  ride table  ------------------------------------
