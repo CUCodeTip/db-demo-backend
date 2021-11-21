@@ -153,15 +153,13 @@ const find_rides = (req, res) => {
       SELECT *
       FROM ride temp
       WHERE ride_status = 'available'
-        AND DATE_FORMAT(starting_time, '%Y-%m-%d') BETWEEN "2021-10-21" AND "2021-12-21"
-        AND (max_available_seats - reserved_passengers) >= 1
-        AND driver_id != 4
+        AND DATE_FORMAT(starting_time, '%Y-%m-%d') BETWEEN ? AND ?
+        AND (max_available_seats - reserved_passengers) >= ?
+        AND driver_id != ?
         AND NOT EXISTS (
           SELECT *
           FROM booking b
-          WHERE b.passenger_id = 4
-            AND b.driver_id = temp.driver_id 
-            AND b.starting_time = temp.starting_time
+          WHERE b.passenger_id = ? AND b.starting_time = temp.starting_time
         )
         ) r
     ON p.user_id = r.driver_id
@@ -169,7 +167,7 @@ const find_rides = (req, res) => {
 
     connection.query(
       query,
-      [startingTime, endTime, requestSeats, userId],
+      [startingTime, endTime, requestSeats, userId, userId],
       (err, result) => {
         if (err) {
           res.sendStatus(404);
