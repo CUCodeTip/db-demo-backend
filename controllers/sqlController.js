@@ -156,7 +156,7 @@ const find_rides = (req, res) => {
         AND NOT EXISTS (
           SELECT *
           FROM booking b
-          WHERE b.passenger_id = ? AND b.starting_time = temp.starting_time
+          WHERE b.passenger_id = ? AND b.driver_id = temp.driver_id AND b.starting_time = temp.starting_time
         )
         ) r
     ON p.user_id = r.driver_id
